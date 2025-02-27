@@ -12,38 +12,40 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let keepgoing = false
-    while(keepgoing == false) {
-        let choice = prompt("Please enter your move: ")
-        choice = choice.toLowerCase()
-        if (choice === "rock" || choice === "paper" || choice === "scissors") {
-            keepgoing = true
-            return choice
-        }  else {
-            keepgoing = false 
-        }
+function playRound(choice) {
+    let hc = choice;
+    let cc = getComputerChoice();
+    if (hc === cc) {
+        return "Draw! You played the same hand.";
+    } else if ((hc === "rock" && cc === "scissors") ||
+               (hc === "paper" && cc === "rock") ||
+               (hc === "scissors" && cc === "paper")) {
+        humanScore++;
+        return `You win! ${hc} beats ${cc}`;
+    } else {
+        computerScore++;
+        return `You lose! ${cc} beats ${hc}`;
     }
 }
 
-function playRound(hc, cc) {
-    let humanChoice = hc
-    let computerChoice = cc
-    if (humanChoice == computerChoice) {
-        return "Draw! You played the same hand"
-    } else if (humanChoice == "rock" && computerChoice == "paper") {
-        return "You lose! Paper beats Rock"
-    } else if (humanChoice == "paper" && computerChoice == "rock") {
-        return "You win! Paper beats Rock"
-    } else if(humanChoice == "scissors" && computerChoice == "paper") {
-        return "You win! Scissors beats Paper"
-    } else if(humanChoice == "paper" && computerChoice == "scissors") {
-        return "You lose! Scissors beats Paper"
-    } else if(humanChoice =="scissors" && computerChoice =="rock") {
-        return "You lose! Rock beats Scissors"
-    } else if(humanChoice =="rock" && computerChoice =="scissors") {
-        return "You win! Rock beats Scissors"
-    }
-}
+const body = document.querySelector("body");
 
-console.log(playRound(getHumanChoice(), getComputerChoice()));
+const display = document.createElement("div");
+const displayhs = document.createElement("div")
+const displaycc = document.createElement("div");
+display.textContent = "Make your choice";
+body.appendChild(display);
+body.appendChild(displayhs);
+body.appendChild(displaycc);
+
+["rock", "paper", "scissors"].forEach((choice) => {
+    const button = document.createElement("button");
+    button.textContent = choice;
+    button.addEventListener("click", () => {
+        display.textContent = playRound(choice);
+        displayhs.textContent = humanScore;
+        displaycc.textContent = computerScore;
+    });
+    body.appendChild(button);
+});
+
